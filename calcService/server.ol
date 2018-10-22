@@ -7,35 +7,44 @@ inputPort MyInput {
   Interfaces: MyInterface
 }
 
+init
+{
+  println@Console( "Server ON" )()
+}
+
 main
 {
   open=true;
   while(open){
-    //input choice per poter rendere le chiamate indipendeti dall'ordine di chiamata
+
     [sum( num )( result ){
-      println@Console( num.x+" "+num.y )();
-      result=num.x+num.y
+      result.value=num.x+num.y;
+      println@Console( num.x + " + " + num.y + " = " + result.value )()
     }]
 
     [prod( num )( result ){
-      println@Console( num.x+" "+num.y )();
-      result=num.x*num.y;
-      println@Console( result )();
-      x=num
+      result.value=num.x*num.y;
+      println@Console( num.x + " * " + num.y + " = " + result.value )()
     }]
 
     [avg( num )( result ){
       i = 0;
       sum = 0;
+      numbersToSum="";
       while( i < #num.array ) {
         sum = sum + num.array[i];
+        if (i==0) { numbersToSum = num.array[i] }
+        else { numbersToSum = numbersToSum + ", "+ num.array[i] };
         i++
       };
-      result=sum/#num.array
+      result.value=sum/#num.array;
+      println@Console( "AVG[ " + numbersToSum + " ] = " + result.value)()
     }]
 
     [close(msg)]{
-      open=false
+      open=false;
+      println@Console( "Server OFF" )()
     }
+
   }
 }
