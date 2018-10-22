@@ -16,46 +16,48 @@ cset {
 
 init
 {
+  keepRunning = true;
   println@Console("Server ON")()
 }
 
 main
 {
-
-  [ login( request )( response ){
+  ////////////////////// LOGIN ///////////////////////
+  login( request )( response ){
     // create new userid
     response.sid = csets.sid = new;
-    // init user's bankAccount
-    global.user.(response.sid) = 0;
-    println@Console("User "+request.name+" Sid: "+csets.sid+" Op: Login")()
-   }]
+    username = request.name;
+    // init user's bankAccount if it does not exist
+    if ( !is_defined( global.users.( request.name ) ) ) {
+      global.users.(request.name) = 0
+    };
+    println@Console("USER "+request.name+" Request: Login")()
+  };
 
+  while( keepRunning ){
 
+    [ whithdraw( request )( result ){
+      global.user.username=global.user.username-request.message;
+      result=global.user.username;
+      println@Console("Sid: "+username+" OP: Whithdraw "+request.message )()
+    }]
 
- [ whithdraw( request )( result ){
-   // println@Console(request.message)();
-   // username = global.username.(sid);
+    [ deposit( request )( result ){
+      global.user.username=global.user.username+request.message;
+      result=global.user.(username);
+      println@Console("Sid: "+username+" Op: Deposit "+request.message )()
+    }]
 
-   global.user.(request.sid)=global.user.(request.sid)-request.message;
-   result=global.user.(request.sid);
-   println@Console("Sid: "+request.sid+" OP: Whithdraw "+request.message )()
- }]
+    [ report( request )( result ){
+      println@Console( "Sid: "+username+" Op: Report")();
+      result=global.user.username
+    }]
 
- [ deposit( num )( result ){
-   println@Console("User "+username+" Sid: "+csets.sid+" Op: Deposit "+num )();
-   money=money+num;
-   result=money
- }]
+    [ logout( request ) ] {
+      println@Console("Sid: "+username+" Op: Logout")();
+      keepRunning = false
+    }
 
- [ report( num )( result ){
-   println@Console( "User "+username+" Sid: "+csets.sid+" Op: Report "+num )();
-   result=money
- }]
-
- [ logout( request ) ]
-  {
-    username = request.sid;
-    println@Console("User "+username+" Sid: "+csets.sid+" Op: Logout")();
-    keepRunning = false
   }
+
 }
