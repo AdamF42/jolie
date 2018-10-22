@@ -29,32 +29,39 @@ main
     username = request.name;
     // init user's bankAccount if it does not exist
     if ( !is_defined( global.users.( request.name ) ) ) {
-      global.users.(request.name) = 0
+      global.users.( request.name ) = 0
     };
     println@Console("USER "+request.name+" Request: Login")()
   };
 
   while( keepRunning ){
 
-    [ whithdraw( request )( result ){
-      global.user.username=global.user.username-request.message;
-      result=global.user.username;
-      println@Console("Sid: "+username+" OP: Whithdraw "+request.message )()
+    [ whithdraw( request )( result ) {
+      if (global.users.(username)>=request.message) {
+        result.value=global.users.(username)=global.users.(username)-request.message;
+        result.status="SUCCESS"
+      }
+      else {
+        result.value=global.users.(username);
+        result.status="FAILURE"
+      };
+      println@Console("USER: "+username+" Request: Whithdraw "+request.message )()
     }]
 
     [ deposit( request )( result ){
-      global.user.username=global.user.username+request.message;
-      result=global.user.(username);
-      println@Console("Sid: "+username+" Op: Deposit "+request.message )()
+      result.value=global.users.(username)=global.users.(username)+request.message;
+      result.status="SUCCESS";
+      println@Console("USER: "+username+" Request: Deposit "+request.message )()
     }]
 
     [ report( request )( result ){
-      println@Console( "Sid: "+username+" Op: Report")();
-      result=global.user.username
+      println@Console( "USER: "+username+" Request: Report")();
+      result.value=global.users.(username);
+      result.status="SUCCESS"
     }]
 
     [ logout( request ) ] {
-      println@Console("Sid: "+username+" Op: Logout")();
+      println@Console("Sid: "+username+" Request: Logout")();
       keepRunning = false
     }
 

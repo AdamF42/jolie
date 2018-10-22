@@ -36,17 +36,18 @@ main
       req.sid=opMessage.sid;
       req.message=2;
       whithdraw@Bank(req)(res);
-      println@Console(res)()
+      if (res.status=="FAILURE") {println@Console("CIAO POVERO!!!")()};
+      println@Console(res.value)()
     }else if (risposta == 2){
       println@Console("2: Deposito")();
       req.sid=opMessage.sid;
       req.message=5;
       deposit@Bank(req)(res);
-      println@Console(res)()
+      println@Console(res.value)()
     }else if (risposta == 3) {
       println@Console("3: Report")();
       report@Bank(opMessage)(res);
-      println@Console(res)()
+      println@Console(res.value)()
     }else
       print@Console("ERROR")()
   }
