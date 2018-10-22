@@ -20,18 +20,15 @@ init
   println@Console("Server ON")()
 }
 
-main
-{
+main {
   ////////////////////// LOGIN ///////////////////////
   login( request )( response ){
-    // create new userid
     response.sid = csets.sid = new;
-    username = request.name;
-    // init user's bankAccount if it does not exist
-    if ( !is_defined( global.users.( request.name ) ) ) {
-      global.users.( request.name ) = 0
+    username = request.username;
+    if ( !is_defined( global.users.( username ) ) ) {
+      global.users.( username ) = 0
     };
-    println@Console("USER "+request.name+" Request: Login")()
+    println@Console("USER "+username+" Request: Login")()
   };
 
   while( keepRunning ){

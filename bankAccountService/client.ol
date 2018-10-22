@@ -12,43 +12,53 @@ init {
 	registerForInput@Console()()
 }
 
-main
-{
+main {
 ////////////////////// LOGIN ///////////////////////
-  request.name="Pippo";
+  println@Console("Insert your username")();
+  in(username);
+  println@Console("Insert your password")();
+  in(password);
+  request.username=username;
+  request.password=password;
   login@Bank(request)(response);
-  opMessage.sid = response.sid;
-  println@Console("Your session identifier is: "+opMessage.sid)();
+  mySid = response.sid;
+  println@Console("Your session identifier is: " + mySid)();
 
-  while(risposta!=0) {
-    println@Console("Inserisci:
-          0 per uscire,
-          1 per prelevare,
-          2 per depositare,
-          3 per un report")();
-    in(risposta);
+  ////////////// SERVICE OPERATIONS ///////////////
+  while(userSelection!=0) {
+    println@Console("Select an operation:
+          0 to logout,
+          1 to withdraw,
+          2 to deposit,
+          3 to get the balance")();
+    in(userSelection);
 
-    if(risposta == 0){
+    if(userSelection == 0){
       println@Console("0: Logout")();
-      logout@Bank(opMessage)
-    }else if (risposta == 1){
-      println@Console("1: Prelievo")();
-      req.sid=opMessage.sid;
-      req.message=2;
+      req.sid=mySid;
+      logout@Bank(req)
+    }
+    else if (userSelection == 1){
+      println@Console("1: Withdraw => Insert amount")();
+      in(amount);
+      req.sid=mySid;
+      req.message=int(amount);
       whithdraw@Bank(req)(res);
-      if (res.status=="FAILURE") {println@Console("CIAO POVERO!!!")()};
-      println@Console(res.value)()
-    }else if (risposta == 2){
-      println@Console("2: Deposito")();
-      req.sid=opMessage.sid;
-      req.message=5;
-      deposit@Bank(req)(res);
-      println@Console(res.value)()
-    }else if (risposta == 3) {
-      println@Console("3: Report")();
-      report@Bank(opMessage)(res);
-      println@Console(res.value)()
-    }else
-      print@Console("ERROR")()
+      if (res.status=="FAILURE") {println@Console("ERROR: Insufficient credit")()}
+    }
+    else if (userSelection == 2){
+      println@Console("2: Deposit => Insert amount")();
+      in(amount);
+      req.sid=mySid;
+      req.message=int(amount);
+      deposit@Bank(req)(res)
+    }
+    else if (userSelection == 3) {
+      req.sid=mySid;
+      report@Bank(req)(res);
+      println@Console("3: Balance => " + res.value)()
+    }
+    else
+      print@Console("ERROR: Invalid input")()
   }
 }
