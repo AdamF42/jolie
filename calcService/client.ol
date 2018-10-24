@@ -3,7 +3,7 @@ include "console.iol"
 
 outputPort B {
   Location: "socket://localhost:8000"
-  Protocol: sodep
+  Protocol: soap
   Interfaces: MyInterface
 }
 

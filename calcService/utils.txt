@@ -1,0 +1,2 @@
+jolie2wsdl  --portName mynamespace.it --portAddr 
+http://localhost:8000  --portName MyInput  --o myWsdl.wsdl server.ol 
