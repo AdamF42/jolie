@@ -3,7 +3,7 @@ include "console.iol"
 
 outputPort Bank {
   Location: "socket://localhost:8000"
-  Protocol: sodep
+  Protocol: soap
   Interfaces: BankInterface
 }
 

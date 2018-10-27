@@ -9,6 +9,7 @@ type RegistationRequest: void {
 type OpMessage: void {
  .sid: string
  .message?: int
+ .status?: string
 }
 type OpReturn: void {
   .value: int
@@ -17,6 +18,7 @@ type OpReturn: void {
 
 interface BankInterface {
  RequestResponse: login(LoginRequest)(OpMessage),
+                  register(RegistationRequest)(OpMessage),
                   whithdraw(OpMessage)(OpReturn),
                   deposit(OpMessage)(OpReturn),
                   report(OpMessage)(OpReturn)
