@@ -9,12 +9,15 @@
   <wsdl:message name="Int">
     <wsdl:part name="body" element="xsd1:close"/>
   </wsdl:message>
+  <wsdl:message name="ProdRequest">
+    <wsdl:part name="body" element="xsd1:prod"/>
+  </wsdl:message>
   <wsdl:message name="SumRequest">
     <wsdl:part name="body" element="xsd1:sum"/>
   </wsdl:message>
   <wsdl:portType name="MyInput">
     <wsdl:operation name="prod">
-      <wsdl:input message="tns:SumRequest"/>
+      <wsdl:input message="tns:ProdRequest"/>
       <wsdl:output message="tns:Int"/>
     </wsdl:operation>
     <wsdl:operation name="avg">
