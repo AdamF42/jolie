@@ -1,5 +1,6 @@
 include "interface.iol"
 include "console.iol"
+include "string_utils.iol"
 
 inputPort MyInput {
   Location: "socket://localhost:8000"
@@ -22,7 +23,8 @@ init
 
 main {
   ////////////////////// LOGIN ///////////////////////
-  login( request )( response ){
+  login( request )( response ) {
+    valueToPreattyString(request);
     username = request.username;
     password = request.password;
     println@Console("user: " + username + " login")();
@@ -33,14 +35,15 @@ main {
       response.status = "SUCCESS"
     }else{
       println@Console("user: " + username + " not found")();
-      response.sid = "";
+      response.sid = " ";
       response.status = "FAILURE"
     };
 
     println@Console("USER "+username+" Request: Login")()
   };
   /////////////////// REGISTRATION ///////////////////
-  register( request )( response ){
+  register( request )( response ) {
+    valueToPreattyString(request);
     username = request.username;
     password = request.password;
     println@Console("user: " + username + " registration")();
@@ -56,7 +59,6 @@ main {
       response.sid = " ";
       response.status = "FAILURE"
     };
-
     println@Console("USER "+username+" Request: Registration")()
   };
 
