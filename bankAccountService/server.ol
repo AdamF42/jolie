@@ -23,8 +23,7 @@ init
 
 main {
   ////////////////////// LOGIN ///////////////////////
-  login( request )( response ) {
-    valueToPreattyString(request);
+  [ login( request )( response ) {
     username = request.username;
     password = request.password;
     println@Console("user: " + username + " login")();
@@ -36,14 +35,45 @@ main {
     }else{
       println@Console("user: " + username + " not found")();
       response.sid = " ";
-      response.status = "FAILURE"
+      response.status = "FAILURE";
+      keepRunning=false
     };
 
     println@Console("USER "+username+" Request: Login")()
-  };
+  }] {
+    while( keepRunning ){
+      [ whithdraw( request )( result ) {
+        if (global.users.(username).balance >= request.message) {
+          result.value=global.users.(username).balance=global.users.(username).balance-request.message;
+          result.status="SUCCESS"
+        }
+        else {
+          result.value=global.users.(username).balance;
+          result.status="FAILURE"
+        };
+        println@Console("USER: "+username+" Request: Whithdraw "+request.message )()
+      }]
+
+      [ deposit( request )( result ){
+        result.value=global.users.(username).balance=global.users.(username).balance+request.message;
+        result.status="SUCCESS";
+        println@Console("USER: "+username+" Request: Deposit "+request.message )()
+      }]
+
+      [ report( request )( result ){
+        println@Console( "USER: "+username+" Request: Report")();
+        result.value=global.users.(username).balance;
+        result.status="SUCCESS"
+      }]
+
+      [ logout( request ) ] {
+        println@Console("Sid: "+username+" Request: Logout")();
+        keepRunning = false
+      }
+    }
+  }
   /////////////////// REGISTRATION ///////////////////
-  register( request )( response ) {
-    valueToPreattyString(request);
+  [ register( request )( response ) {
     username = request.username;
     password = request.password;
     println@Console("user: " + username + " registration")();
@@ -57,42 +87,42 @@ main {
     }else{
       println@Console("user: " + username + " found")();
       response.sid = " ";
-      response.status = "FAILURE"
+      response.status = "FAILURE";
+      keepRunning=false
     };
     println@Console("USER "+username+" Request: Registration")()
-  };
+  }] {
 
-  while( keepRunning ){
+    while( keepRunning ){
 
-    [ whithdraw( request )( result ) {
-      if (global.users.(username).balance >= request.message) {
-        result.value=global.users.(username).balance=global.users.(username).balance-request.message;
-        result.status="SUCCESS"
-      }
-      else {
+      [ whithdraw( request )( result ) {
+        if (global.users.(username).balance >= request.message) {
+          result.value=global.users.(username).balance=global.users.(username).balance-request.message;
+          result.status="SUCCESS"
+        }
+        else {
+          result.value=global.users.(username).balance;
+          result.status="FAILURE"
+        };
+        println@Console("USER: "+username+" Request: Whithdraw "+request.message )()
+      }]
+
+      [ deposit( request )( result ){
+        result.value=global.users.(username).balance=global.users.(username).balance+request.message;
+        result.status="SUCCESS";
+        println@Console("USER: "+username+" Request: Deposit "+request.message )()
+      }]
+
+      [ report( request )( result ){
+        println@Console( "USER: "+username+" Request: Report")();
         result.value=global.users.(username).balance;
-        result.status="FAILURE"
-      };
-      println@Console("USER: "+username+" Request: Whithdraw "+request.message )()
-    }]
+        result.status="SUCCESS"
+      }]
 
-    [ deposit( request )( result ){
-      result.value=global.users.(username).balance=global.users.(username).balance+request.message;
-      result.status="SUCCESS";
-      println@Console("USER: "+username+" Request: Deposit "+request.message )()
-    }]
-
-    [ report( request )( result ){
-      println@Console( "USER: "+username+" Request: Report")();
-      result.value=global.users.(username).balance;
-      result.status="SUCCESS"
-    }]
-
-    [ logout( request ) ] {
-      println@Console("Sid: "+username+" Request: Logout")();
-      keepRunning = false
+      [ logout( request ) ] {
+        println@Console("Sid: "+username+" Request: Logout")();
+        keepRunning = false
+      }
     }
-
   }
-
 }
